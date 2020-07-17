@@ -32,7 +32,7 @@ def RUN_GetAdList(test=False):
     Operations.SaveAd(ad)
 
 def RUN_SendEmails(user, test=False):
-  ads = Operations.GetAllUnNotifiedAds()[1:10]
+  ads = Operations.GetAllUnNotifiedAds()
 
   if test:
     ads = [random.choice(ads)]
