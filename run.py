@@ -44,7 +44,7 @@ def RUN_SendEmails(user, test=False):
 if __name__ == "__main__":
   args = sys.argv
   argscount = len(args)
-  cmd = args[1] if argscount > 1 else 'SendEmails'
+  cmd = args[1] if argscount > 1 else 'GetAdList'
   test = args[2] == 'True' if argscount > 2 else True
 
   if cmd == 'GetAdList':
