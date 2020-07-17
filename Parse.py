@@ -137,7 +137,7 @@ class AdListParser:
   ads = []
 
   def __init__(self, sites, keywords):
-    for site in sites[0:10]:
+    for site in sites:
       for keyword in keywords:
         url = self.searchPre.format(site.Value, keyword.Value)
         ad_list = self.fetchAdLinks(url)

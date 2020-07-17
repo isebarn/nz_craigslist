@@ -1,19 +1,28 @@
 from Parse import AdParser, AdListParser
 from ORM import Operations
+import sys
+import random
 
-def save_ad_data(ad_orm, url):
-  parser = AdParser(url)
-  ad = parser.ORMObject()
-  Operations.UpdateAd(ad_orm, ad)
+def RUN_GetAdData(test=False):
 
-def RUN_GetAd():
   unread_ads = Operations.GetAllUnreadAds()
-  for unread_ad in unread_ads:
-    save_ad_data(unread_ad, unread_ad.URL)
 
-def RUN_GetAdList():
+  if test:
+    unread_ads = [random.choice(unread_ads)]
+
+  for unread_ad in unread_ads:
+    parsed_ad = AdParser(unread_ad.URL)
+    ad = parsed_ad.ORMObject()
+    Operations.UpdateAd(unread_ad, ad)
+
+
+def RUN_GetAdList(test=False):
   sites = Operations.GetAllSites()
   keywords = Operations.GetAllKeywords()
+
+  if test:
+    sites = [random.choice(sites)]
+    keywords = [random.choice(keywords)]
 
   ads = AdListParser(sites, keywords)
 
@@ -21,8 +30,12 @@ def RUN_GetAdList():
     Operations.SaveAd(ad)
 
 
-
 if __name__ == "__main__":
-  #RUN_GetAdList()
-  RUN_GetAd()
+  cmd = sys.argv[1] if len(sys.argv) > 1 else 'GetAdList'
+  test = sys.argv[2] == 'True' if len(sys.argv) > 2 else True
 
+  if cmd == 'GetAdList':
+    RUN_GetAdList(test)
+
+  elif cmd == 'GetAdData':
+    RUN_GetAdData(test)

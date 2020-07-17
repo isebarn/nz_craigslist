@@ -32,19 +32,19 @@ class Email:
 
     msg['Subject'] = ad.Header
     msg['From'] = self.user['email']
-    msg['To'] = 'isebarn182@gmail.com' #ad.Email
+    msg['To'] = '@gmail.com' #ad.Email
 
     server = smtplib.SMTP(smtp_server, smtp_port)
     server.ehlo()
     server.starttls()
     server.login(smtp_user, smtp_password)
-    server.sendmail(self.user['email'], 'isebarn182@gmail.com', msg.as_string())
+    server.sendmail(self.user['email'], msg['To'], msg.as_string())
     server.quit()
 
 if __name__ == "__main__":
   user = {}
-  user['email'] = 'isebarn182@gmail.com'
-  user['password'] = 'tommy182'
+  user['email'] = '@gmail.com'
+  user['password'] = ''
 
   ads = Operations.GetAllUnNotifiedAds()[1:10]
   email = Email(user, ads)

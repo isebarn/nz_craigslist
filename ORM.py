@@ -93,6 +93,7 @@ class Operations:
       session.commit()
 
   def UpdateAd(ad_orm, data):
+    print(data)
     ad_orm.Update(data)
 
     session.commit()
