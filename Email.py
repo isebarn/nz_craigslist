@@ -32,7 +32,7 @@ class Email:
 
     msg['Subject'] = ad.Header
     msg['From'] = self.user['email']
-    msg['To'] = '@gmail.com' #ad.Email
+    msg['To'] = ad.Email
 
     server = smtplib.SMTP(smtp_server, smtp_port)
     server.ehlo()
