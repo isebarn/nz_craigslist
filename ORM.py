@@ -93,9 +93,12 @@ class Operations:
       session.commit()
 
   def UpdateAd(ad_orm, data):
-    print(data)
     ad_orm.Update(data)
 
+    session.commit()
+
+  def MarkEmailSent(ad_orm):
+    ad_orm.Notified = True
     session.commit()
 
 

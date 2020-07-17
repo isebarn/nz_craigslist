@@ -41,6 +41,8 @@ class Email:
     server.sendmail(self.user['email'], msg['To'], msg.as_string())
     server.quit()
 
+    Operations.MarkEmailSent(ad)
+
 if __name__ == "__main__":
   ads = Operations.GetAllUnNotifiedAds()
   email = Email({}, ads)
