@@ -79,7 +79,7 @@ class Operations:
       ).filter(Ad.Time == None).all()
 
   def GetAllUnNotifiedAds():
-    return session.query(Ad).filter(Ad.Notified == False).all()
+    return session.query(Ad).filter(Ad.Notified == False, Ad.Email != None).all()
 
   def SaveAd(data):
     ad = Ad(data)

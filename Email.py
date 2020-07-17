@@ -42,12 +42,8 @@ class Email:
     server.quit()
 
 if __name__ == "__main__":
-  user = {}
-  user['email'] = '@gmail.com'
-  user['password'] = ''
-
-  ads = Operations.GetAllUnNotifiedAds()[1:10]
-  email = Email(user, ads)
+  ads = Operations.GetAllUnNotifiedAds()
+  email = Email({}, ads)
   email.run()
 
 
