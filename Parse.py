@@ -133,13 +133,17 @@ class AdParser:
       pass
 
 class AdListParser:
-  searchPre = "{}/search/rea?query=\"{}\""
+  searchPre = "{}/search/rea?query=\"{}\" {}"
+  excludeString = " -\"{}\""
   ads = []
 
-  def __init__(self, sites, keywords):
+  def __init__(self, sites, keywords, exclusions):
+
+    exclusions  = ''.join([self.excludeString.format(x.Value) for x in exclusions])
+
     for site in sites:
       for keyword in keywords:
-        url = self.searchPre.format(site.Value, keyword.Value)
+        url = self.searchPre.format(site.Value, keyword.Value, exclusions)
         ad_list = self.fetchAdLinks(url)
 
         if len(ad_list) > 0:
@@ -174,17 +178,7 @@ class AdListParser:
 
 
 if __name__ == "__main__":
-  url = "https://monroemi.craigslist.org/search/rea?query=%224%20plex%22"
-  http = urllib3.PoolManager()
-  r = http.request("GET", url)
-  soup = BeautifulSoup(r.data, features="lxml")
-
-  a = soup.find_all("div", class_="alert alert-sm alert-warning")
-  print(a)
-
-  #linkTags = soup.find_all("a", class_="result-title hdrlnk")
-  #links = [x['href'] for x in linkTags]
-
-  # a = AdListParser(sites, keywords)
-  # for x in a.ads:
-  #   print(x)
+  sites = Operations.GetAllSites()
+  keywords = Operations.GetAllKeywords()
+  Exclusions = Operations.GetAllExclusions()
+  AdListParser(sites, keywords, Exclusions)

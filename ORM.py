@@ -25,6 +25,11 @@ class Keywords(Base):
   Id = Column('id', Integer, primary_key=True)
   Value = Column('value', Text)
 
+class Exclusion(Base):
+  __tablename__ = 'exclusion'
+  Id = Column('id', Integer, primary_key=True)
+  Value = Column('value', Text)
+
 class Ad(Base):
   __tablename__ = 'ads'
 
@@ -67,6 +72,8 @@ class Ad(Base):
 
 
 class Operations:
+  def GetAllExclusions():
+    return session.query(Exclusion).all()
 
   def GetAllKeywords():
     return session.query(Keywords).all()
@@ -111,4 +118,4 @@ session = Session()
 
 if __name__ == "__main__":
   print(os.environ.get('DATABASE'))
-  print(Operations.GetAllUnreadAds())
+  print(Operations.GetAllExclusion())
