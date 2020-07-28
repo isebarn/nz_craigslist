@@ -12,7 +12,10 @@ def RUN_GetAdData(test=False):
   if test:
     unread_ads = [random.choice(unread_ads)]
 
+  counter = 0
   for unread_ad in unread_ads:
+    counter += 1
+    print('{}/{}'.format(counter, len(unread_ads)))
     parsed_ad = AdParser(unread_ad.URL)
     ad = parsed_ad.ORMObject()
     Operations.UpdateAd(unread_ad, ad)
@@ -21,12 +24,13 @@ def RUN_GetAdData(test=False):
 def RUN_GetAdList(test=False):
   sites = Operations.GetAllSites()
   keywords = Operations.GetAllKeywords()
+  exclusions = Operations.GetAllExclusions()
 
   if test:
     sites = [random.choice(sites)]
     keywords = [random.choice(keywords)]
 
-  ads = AdListParser(sites, keywords)
+  ads = AdListParser(sites, keywords, exclusions)
 
   for ad in ads.ads:
     Operations.SaveAd(ad)

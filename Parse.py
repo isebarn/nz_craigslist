@@ -5,10 +5,15 @@ from bs4 import BeautifulSoup
 import urllib3
 import time
 from urllib.parse import urlparse, parse_qs
-
+import os
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import random
 from ORM import Operations
 
+#from ORM import Operations
+
 states = {"Alabama": "AL", "Alaska": "AK", "Arizona": "AZ", "Arkansas": "AR", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE", "Georgia": "GA", "Hawaii": "HI", "Idaho": "ID", "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS", "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Maryland": "MD", "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS", "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV", "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "North Carolina": "NC", "North Dakota": "ND", "Ohio": "OH", "Oklahoma": "OK", "Oregon": "OR", "Pennsylvania": "PA", "Rhode Island": "RI", "South Carolina": "SC", "South Dakota": "SD", "Tennessee": "TN", "Utah": "UT", "Vermont": "VT", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV", "Wisconsin": "WI", "Wyoming": "WY"}
+driver = webdriver.Remote(os.environ.get('BROWSER'), DesiredCapabilities.FIREFOX)
 
 def getAllSites():
   url = "https://geo.craigslist.org/iso/us/{}"
@@ -29,9 +34,6 @@ def getAllSites():
 
 def openPage(url):
   try:
-    options = Options()
-    options.headless = True
-    driver = webdriver.Firefox(options=options, executable_path='/usr/bin/geckodriver')
     driver.get(url)
 
     return driver
@@ -71,22 +73,20 @@ class AdParser:
 
   def readAd(self):
 
-    self.driver = openPage(self.URL)
+    driver = openPage(self.URL)
 
-    if self.driver is None:
+    if driver is None:
       return
 
     self.setGeolocation()
     self.setHeader()
     self.setEmail()
 
-    self.driver.quit()
-
 
   def setHeader(self):
 
     try:
-      soup = driverToBS4(self.driver)
+      soup = driverToBS4(driver)
       headers = soup.find_all("h2", class_="postingtitle")
       self.header = [x.text.replace('\n', '') for x in headers][0]
 
@@ -96,13 +96,13 @@ class AdParser:
   def setEmail(self):
 
     try:
-      rebtn = self.driver.find_element_by_css_selector('.reply-button.js-only')
+      rebtn = driver.find_element_by_css_selector('.reply-button.js-only')
       rebtn.click()
 
       counter = 0
 
       while counter < 10:
-        soup = driverToBS4(self.driver)
+        soup = driverToBS4(driver)
         emailItems = soup.find_all("a", class_="mailapp")
 
         if len(emailItems) > 0:
@@ -119,7 +119,7 @@ class AdParser:
 
     try:
 
-      soup = driverToBS4(self.driver)
+      soup = driverToBS4(driver)
 
       maps = soup.find_all("div", class_="viewposting leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom")
 
@@ -141,7 +141,14 @@ class AdListParser:
 
     exclusions  = ''.join([self.excludeString.format(x.Value) for x in exclusions])
 
+    counter = 0
     for site in sites:
+      counter += 1
+      print("{}/{}: collected: {}".format(counter, len(sites), len(self.ads)))
+
+      if len(self.ads) > 1000:
+        break
+
       for keyword in keywords:
         url = self.searchPre.format(site.Value, keyword.Value, exclusions)
         ad_list = self.fetchAdLinks(url)
@@ -178,7 +185,4 @@ class AdListParser:
 
 
 if __name__ == "__main__":
-  sites = Operations.GetAllSites()
-  keywords = Operations.GetAllKeywords()
-  Exclusions = Operations.GetAllExclusions()
-  AdListParser(sites, keywords, Exclusions)
+  print(1)
