@@ -37,6 +37,15 @@ def RUN_GetAdList(test=False):
 
 def RUN_SendEmails(user, test=False):
   ads = Operations.GetAllUnNotifiedAds()
+  for x in ads:
+    ad_title = x.URL.split('/d/')[-1].split('/')[0]
+
+    if ad_title in new_ads:
+      x.Notified = True
+      Operations.MarkEmailSent(x)
+
+    else:
+      new_ads.append(ad_title)
 
   if test:
     ads = [random.choice(ads)]
